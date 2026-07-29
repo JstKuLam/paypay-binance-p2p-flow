@@ -1410,11 +1410,11 @@
     function buildManhattanPath(start, end, fromPort, toPort) {
       const sx = start.x;
       const sy = start.y;
-      const arrowLen = 12;
+      const arrowLen = 12; // Arrowhead length offset
       let ex = end.x;
       let ey = end.y;
 
-      // Trim stroke line endpoint back by arrowLen so line NEVER penetrates into the arrowhead
+      // Trim stroke line endpoint back by arrowLen so line NEVER penetrates into the arrowhead!
       if (toPort === 'left') {
         ex = end.x - arrowLen;
       } else if (toPort === 'right') {
@@ -1425,27 +1425,16 @@
         ey = end.y + arrowLen;
       }
 
-      // Custom Corridors for Top-to-Top and Bottom-to-Bottom to bypass cards cleanly
-      if (fromPort === 'top' && toPort === 'top') {
-        const topY = Math.min(sy, end.y) - 48;
-        return `M ${sx} ${sy} L ${sx} ${topY} L ${ex} ${topY} L ${ex} ${ey}`;
-      }
-
-      if (fromPort === 'bottom' && toPort === 'bottom') {
-        const bottomY = Math.max(sy, end.y) + 48;
-        return `M ${sx} ${sy} L ${sx} ${bottomY} L ${ex} ${bottomY} L ${ex} ${ey}`;
-      }
-
       // Straight Horizontal (same Y level)
       if ((fromPort === 'right' && toPort === 'left') || (fromPort === 'left' && toPort === 'right')) {
-        if (Math.abs(sy - ey) < 16) {
+        if (Math.abs(sy - ey) < 14) {
           return `M ${sx} ${sy} L ${ex} ${ey}`;
         }
       }
 
       // Straight Vertical (same X level)
       if ((fromPort === 'bottom' && toPort === 'top') || (fromPort === 'top' && toPort === 'bottom')) {
-        if (Math.abs(sx - ex) < 16) {
+        if (Math.abs(sx - ex) < 14) {
           return `M ${sx} ${sy} L ${ex} ${ey}`;
         }
       }
@@ -1468,11 +1457,22 @@
       else if (toPort === 'top') cy2 = ey - margin;
       else if (toPort === 'bottom') cy2 = ey + margin;
 
-      // 4-segment Orthogonal Path stepping away from card borders by margin
+      // Custom Corridors for Top-to-Top and Bottom-to-Bottom
+      if (fromPort === 'top' && toPort === 'top') {
+        const topY = Math.min(sy, end.y) - 32;
+        return `M ${sx} ${sy} L ${sx} ${topY} L ${ex} ${topY} L ${ex} ${ey}`;
+      }
+
+      if (fromPort === 'bottom' && toPort === 'bottom') {
+        const bottomY = Math.max(sy, end.y) + 40;
+        return `M ${sx} ${sy} L ${sx} ${bottomY} L ${ex} ${bottomY} L ${ex} ${ey}`;
+      }
+
+      // Orthogonal Manhattan Routing with Guaranteed Non-Zero Approach Segment
       if (fromPort === 'left' || fromPort === 'right') {
         return `M ${sx} ${sy} L ${cx1} ${sy} L ${cx1} ${cy2} L ${ex} ${cy2} L ${ex} ${ey}`;
       } else {
-        return `M ${sx} ${sy} L ${sx} ${cy1} L ${cx2} ${cy1} L ${cx2} ${ey} L ${ex} ${ey}`;
+        return `M ${sx} ${sy} L ${sx} ${cy1} L ${cx2} ${cy1} L ${cx2} ${cy2} L ${ex} ${cy2} L ${ex} ${ey}`;
       }
     }
 
