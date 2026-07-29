@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quy Trình Giao Dịch P2P Binance x PayPay | User Flows</title>
+  
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      /* Brand Color Palette */
+      --brand-binance: #f0b90b;
+      --brand-binance-dark: #1e2329;
+      --brand-binance-light: #fffcf0;
+      --brand-binance-border: #fcd535;
+      --brand-binance-text: #925f00;
+
+      --brand-paypay: #8b5cf6;
+      --brand-paypay-light: #f3e8ff;
+      --brand-paypay-border: #ddd6fe;
+      --brand-paypay-text: #6d28d9;
+
+      --brand-buyer: #2563eb;
+      --brand-buyer-light: #eff6ff;
+      --brand-buyer-border: #bfdbfe;
+      --brand-buyer-text: #1d4ed8;
+
+      --brand-seller: #059669;
+      --brand-seller-light: #ecfdf5;
+      --brand-seller-border: #a7f3d0;
+      --brand-seller-text: #047857;
+
+      --brand-support: #0284c7;
+      --brand-support-light: #e0f2fe;
+      --brand-support-border: #bae6fd;
+      --brand-support-text: #0369a1;
+
+      --primary: var(--brand-buyer);
+      --primary-hover: #1d4ed8;
+      --primary-light: var(--brand-buyer-light);
+      --primary-border: var(--brand-buyer-border);
+      
+      --secondary: #0f172a;
+      --accent-green: #10b981;
+      --accent-green-light: #ecfdf5;
+      --accent-amber: #f59e0b;
+      --accent-amber-light: #fffbeb;
+      --accent-purple: #8b5cf6;
+      
+      --bg-page: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-header: #ffffff;
+      --bg-hover: #f1f5f9;
+      --bg-grid-alt: #f8fafc;
+      
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --text-white: #ffffff;
+      
+      --border-color: #e2e8f0;
+      --border-dark: #cbd5e1;
+      
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    [data-theme="dark"] {
+      --brand-binance-light: #2a240e;
+      --brand-binance-text: #f0b90b;
+
+      --brand-paypay-light: #3b0764;
+      --brand-paypay-text: #c084fc;
+
+      --brand-buyer-light: #172554;
+      --brand-buyer-text: #60a5fa;
+
+      --brand-seller-light: #064e3b;
+      --brand-seller-text: #34d399;
+
+      --brand-support-light: #075985;
+      --brand-support-text: #38bdf8;
+
+      --bg-page: #0f172a;
+      --bg-card: #1e293b;
+      --bg-header: #0f172a;
+      --bg-hover: #334155;
+      --bg-grid-alt: #182234;
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      
+      --border-color: #334155;
+      --border-dark: #475569;
+      
+      --primary-light: #1e3a8a;
+      --primary-border: #2563eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      height: 100%;
+    }
+
+    body {
+      min-height: 100%;
+      font-family: var(--font-body);
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+    }
+
+    body.is-scrolling * {
+      pointer-events: none !important;
+    }
+
+    /* App Header */
+    .app-header {
+      background-color: var(--bg-header);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 30;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-badge {
+      padding: 0.35rem 0.65rem;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    .logo-binance {
+      background-color: #f0b90b;
+      color: #000000;
+    }
+
+    .logo-paypay {
+      background-color: #ff0033;
+      color: #ffffff;
+    }
+
+    .brand-title h1 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .brand-title p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    
+
+    
+
+    
+
+    /* Main Container & Sections */
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 2rem;
+      gap: 2rem;
+    }
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    .view-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .view-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .view-mode-toggle {
+      display: flex;
+      background-color: var(--bg-grid-alt);
+      padding: 3px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .view-btn {
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+    }
+
+    .view-btn.active {
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      box-shadow: var(--shadow-sm);
+      font-weight: 600;
+    }
+
+    
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary-border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Swimlane Matrix Styling */
+    .swimlane-scroll-container {
+      flex: 1;
+      overflow: visible;
+      position: relative;
+      padding: 1rem 0;
+    }
+
+    .swimlane-grid {
+      display: grid;
+      grid-template-columns: 180px repeat(4, minmax(280px, 1fr));
+      gap: 28px;
+      min-width: 1350px;
+      position: relative;
+      padding-bottom: 80px;
+    }
+
+    /* Grid Column Headers with Brand Accents */
+    .grid-header.header-user { border-top: 3px solid var(--brand-buyer); background-color: var(--brand-buyer-light); }
+    .grid-header.header-seller { border-top: 3px solid var(--brand-seller); background-color: var(--brand-seller-light); }
+    .grid-header.header-paypay { border-top: 3px solid var(--brand-paypay); background-color: var(--brand-paypay-light); }
+    .grid-header.header-binance { border-top: 3px solid var(--brand-binance); background-color: var(--brand-binance-light); }
+    .grid-header.header-support { border-top: 3px solid var(--brand-support); background-color: var(--brand-support-light); }
+
+    /* Sticky Headers */
+    .grid-header {
+      position: relative;
+      z-index: 15;
+      background-color: var(--bg-card);
+      padding: 0.85rem;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .grid-header.corner-header {
+      left: 0;
+      z-index: 20;
+      background-color: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--primary-border);
+    }
+
+    .role-badge {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .role-user { background-color: var(--brand-buyer); }
+    .role-seller { background-color: var(--brand-seller); }
+    .role-paypay { background-color: var(--brand-paypay); }
+    .role-binance { background-color: var(--brand-binance); }
+    .role-support { background-color: var(--brand-support); }
+
+    .phase-header {
+      position: relative;
+      z-index: 10;
+      background-color: var(--bg-card);
+      padding: 1rem 0.85rem;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.85rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .phase-number {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--primary);
+      letter-spacing: 0.5px;
+    }
+
+    /* Cards inside Grid */
+    .grid-cell {
+      min-height: 160px;
+      border-radius: var(--radius-md);
+      background-color: var(--bg-grid-alt);
+      border: 1px solid var(--border-color);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      transition: border-color 0.2s;
+    }
+
+    .card-node {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius-sm);
+      padding: 0.95rem;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      z-index: 8;
+    }
+
+    .card-node[data-role="user"] { border-left-color: var(--brand-buyer); }
+    .card-node[data-role="user"] .card-step-tag { background-color: var(--brand-buyer-light); color: var(--brand-buyer-text); }
+
+    .card-node[data-role="seller"] { border-left-color: var(--brand-seller); }
+    .card-node[data-role="seller"] .card-step-tag { background-color: var(--brand-seller-light); color: var(--brand-seller-text); }
+
+    .card-node[data-role="paypay"] { border-left-color: var(--brand-paypay); }
+    .card-node[data-role="paypay"] .card-step-tag { background-color: var(--brand-paypay-light); color: var(--brand-paypay-text); }
+
+    .card-node[data-role="binance"] { border-left-color: var(--brand-binance); }
+    .card-node[data-role="binance"] .card-step-tag { background-color: var(--brand-binance-light); color: var(--brand-binance-text); }
+
+    .card-node[data-role="support"] { border-left-color: var(--brand-support); }
+    .card-node[data-role="support"] .card-step-tag { background-color: var(--brand-support-light); color: var(--brand-support-text); }
+
+    .card-node:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-step-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-hover);
+      color: var(--text-muted);
+    }
+
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-top: 0.3rem;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+      padding-top: 0.4rem;
+      border-top: 1px var(--border-color);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .badge-time {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* SVG Canvas Overlay */
+    .svg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 12;
+    }
+
+    .connection-line {
+      fill: none;
+      stroke: var(--border-dark);
+      stroke-width: 2.5;
+      stroke-dasharray: 6 4;
+      marker-end: url(#arrow-default);
+      transition: all 0.3s;
+    }
+
+    .connection-line.active {
+      stroke: var(--primary);
+      stroke-width: 3.5;
+      stroke-dasharray: 8 4;
+      marker-end: url(#arrow-active);
+      animation: flowAnimation 0.8s linear infinite;
+    }
+
+    @keyframes flowAnimation {
+      from { stroke-dashoffset: 24; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* Hover State Highlight */
+    .swimlane-container.grid-hovered .card-node {
+      opacity: 0.3;
+    }
+
+    .swimlane-container.grid-hovered .card-node.highlighted {
+      opacity: 1;
+      transform: scale(1.02);
+      box-shadow: 0 0 15px rgba(37, 99, 235, 0.3);
+      border-color: var(--primary);
+    }
+
+    /* Step-by-Step Cards View */
+    .step-list-wrapper {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      max-width: 960px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .step-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s;
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 1.25rem;
+    }
+
+    .step-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-border);
+    }
+
+    .step-number-box {
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius-md);
+      background-color: var(--primary-light);
+      color: var(--primary);
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-main-info h3 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+
+    }
+
+    .step-role-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .step-details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+      background-color: var(--bg-page);
+      padding: 0.85rem;
+      border-radius: var(--radius-md);
+      font-size: 0.8rem;
+    }
+
+    .detail-box-title {
+      font-weight: 700;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .detail-box-content {
+      color: var(--text-main);
+      line-height: 1.4;
+    }
+
+    .branch-alert {
+      margin-top: 0.85rem;
+      padding: 0.65rem 0.85rem;
+      border-radius: var(--radius-md);
+      background-color: var(--accent-amber-light);
+      border-left: 3px solid var(--accent-amber);
+      font-size: 0.78rem;
+      color: #92400e;
+    }
+
+    /* RACI & SLA View */
+    .raci-wrapper {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .raci-table-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 2rem;
+    }
+
+    .raci-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    .raci-table th {
+      background-color: var(--bg-hover);
+      padding: 0.85rem 1rem;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .raci-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .raci-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+
+    .raci-r { background-color: #dbeafe; color: #1e40af; } /* Responsible */
+    .raci-a { background-color: #fef3c7; color: #92400e; } /* Accountable */
+    .raci-c { background-color: #e0e7ff; color: #3730a3; } /* Consulted */
+    .raci-i { background-color: #f1f5f9; color: #475569; } /* Informed */
+
+    /* Simulator Modal / Widget */
+    .simulator-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--primary-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      margin-top: 1rem;
+    }
+
+    .sim-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .sim-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .receipt-mock {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.78rem;
+    }
+
+    .receipt-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+      border-bottom: 1px stroke #e2e8f0;
+      padding-bottom: 0.2rem;
+    }
+
+    .btn-action {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-action:hover {
+      background-color: var(--primary-hover);
+    }
+
+    /* Modal Details */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-lg);
+      max-width: 550px;
+      width: 90%;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .modal-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+  
+    /* Collapsible Phase Header */
+    .phase-header {
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.2s, opacity 0.2s;
+    }
+
+    .phase-header:hover {
+      background-color: var(--bg-hover) !important;
+    }
+
+    
+
+    .phase-header.phase-collapsed 
+
+    .grid-cell
+
+    
+
+
+    
+
+  </style>
+</head>
+<body>
+
+  
+
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="brand-container">
+      <div class="brand-logo">
+        <div class="logo-badge logo-binance" style="display: inline-flex; align-items: center; gap: 8px; background: #1e2329; color: #f0b90b; padding: 10px 18px; border-radius: 10px; font-weight: 800; font-size: 1.2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.15);">
+  <svg width="36" height="36" viewBox="0 0 126.611 126.611" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <polygon fill="#F3BA2F" points="38.171,53.203 62.759,28.616 87.36,53.216 101.667,38.909 62.759,0 23.864,38.896"/>
+    <rect x="3.644" y="53.188" transform="matrix(0.7071 0.7071 -0.7071 0.7071 48.7933 8.8106)" fill="#F3BA2F" width="20.233" height="20.234"/>
+    <polygon fill="#F3BA2F" points="38.171,73.408 62.759,97.995 87.359,73.396 101.674,87.695 101.667,87.703 62.759,126.611 23.863,87.716 23.843,87.696"/>
+    <rect x="101.64" y="53.189" transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 235.5457 29.0503)" fill="#F3BA2F" width="20.234" height="20.233"/>
+    <polygon fill="#F3BA2F" points="77.271,63.298 77.277,63.298 62.759,48.78 52.03,59.509 52.029,59.509 50.797,60.742 48.254,63.285 48.254,63.285 48.234,63.305 48.254,63.326 62.759,77.831 77.277,63.313 77.274,63.305"/>
+  </svg>
+  <span>BINANCE</span>
+</div>
+        <span style="font-weight: 900; font-size: 1.6rem; color: var(--text-muted); margin: 0 8px;">×</span>
+        <div class="logo-badge logo-paypay" style="display: inline-flex; align-items: center; gap: 8px; background: #8b5cf6; color: #ffffff; padding: 10px 18px; border-radius: 10px; font-weight: 800; font-size: 1.2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.15);">
+  <img src="data:image/png;base64,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" alt="PayPay" style="height: 36px; width: 36px; object-fit: contain;">
+  <span>PayPay</span>
+</div>
+      </div>
+      <div class="brand-title">
+        <h1>Quy Trình Giao Dịch P2P & Đối Soát Tự Động</h1>
+        <p>Tài liệu Chuẩn hóa Vận hành & Trải nghiệm Người dùng (User Flow Specification)</p>
+      </div>
+    </div>
+    </header>
+
+  <!-- Main Content Wrapper -->
+  <div class="main-wrapper">
+    
+    <!-- View Mode Switcher Header Bar -->
+    <div class="view-header-bar">
+      <div class="view-title">Sơ Đồ Quy Trình Giao Dịch P2P Binance x PayPay</div>
+      <div class="view-mode-toggle" id="viewToggleGroup">
+        <button class="view-btn active" data-view="swimlane">
+          <svg style="vertical-align: middle; margin-right: 4px;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Swimlane Grid
+        </button>
+        <button class="view-btn" data-view="steps">
+          <svg style="vertical-align: middle; margin-right: 4px;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Các Bước Chi Tiết
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Sections Container -->
+    <div class="content-viewport">
+
+      <!-- ================= BUYER FLOW SECTION ================= -->
+      <div id="buyer-section" style="margin-bottom: 3rem;">
+        <h2 class="section-title">
+          <svg style="vertical-align: middle; margin-right: 6px;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>1. Luồng Người Dùng Đi Mua Coin (Buyer Flow)
+        </h2>
+        
+        <!-- Swimlane View -->
+        <div class="swimlane-scroll-container swimlane-view-mode">
+          <div class="swimlane-grid" id="buyerSwimlaneGrid">
+            <!-- Headers -->
+            <div class="grid-header corner-header">
+              <span>Giai Đoạn \ Vai Trò</span>
+            </div>
+            <div class="grid-header">
+              <span><span class="role-badge role-user"></span> User Mua (Buyer)</span>
+            </div>
+            <div class="grid-header">
+              <span><span class="role-badge role-paypay"></span> <img src="data:image/png;base64,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" alt="PayPay" style="height: 26px; width: 26px; vertical-align: middle; margin-right: 6px; background: #8b5cf6; border-radius: 6px; padding: 3px;">Ví PayPay App</span>
+            </div>
+            <div class="grid-header">
+              <span><span class="role-badge role-binance"></span> <svg width="26" height="26" viewBox="0 0 126.611 126.611" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 6px;">
+<polygon fill="#F3BA2F" points="38.171,53.203 62.759,28.616 87.36,53.216 101.667,38.909 62.759,0 23.864,38.896"/>
+<rect x="3.644" y="53.188" transform="matrix(0.7071 0.7071 -0.7071 0.7071 48.7933 8.8106)" fill="#F3BA2F" width="20.233" height="20.234"/>
+<polygon fill="#F3BA2F" points="38.171,73.408 62.759,97.995 87.359,73.396 101.674,87.695 101.667,87.703 62.759,126.611 23.863,87.716 23.843,87.696"/>
+<rect x="101.64" y="53.189" transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 235.5457 29.0503)" fill="#F3BA2F" width="20.234" height="20.233"/>
+<polygon fill="#F3BA2F" points="77.271,63.298 77.277,63.298 62.759,48.78 52.03,59.509 52.029,59.509 50.797,60.742 48.254,63.285 48.254,63.285 48.234,63.305 48.254,63.326 62.759,77.831 77.277,63.313 77.274,63.305"/>
+</svg>Sàn Binance P2P</span>
+            </div>
+            <div class="grid-header">
+              <span><span class="role-badge role-support"></span> Hệ thống/Support API</span>
+            </div>
+
+            <!-- ROW 1: Initiation -->
+            <div class="phase-header">
+              <span class="phase-number">GĐ 1</span>
+              <span>Khớp Đơn & Khai Tháo</span>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="b-step1" data-role="user" data-step="B1">
+                <div class="card-header">
+                  <span class="card-step-tag">Bước 1.1</span>
+                </div>
+                <div class="card-title">Tạo Đơn & Check Thông tin</div>
+                <div class="card-desc">Khớp đơn P2P trên Binance. Lấy Ví PayPay ID / Mã QR của Người bán trong P2P Chat.</div>
+                <div class="card-meta">
+                  <span class="badge-time"><svg style="vertical-align: middle; margin-right: 4px;" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>15-30 phút SLA</span>
+                </div>
+              </div>
+            </div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell">
+              <div class="card-node" id="b-step1-binance" data-role="binance" data-step="B1.2">
+                <div class="card-header">
+                  <span class="card-step-tag">Hệ thống</span>
+                </div>
+                <div class="card-title">Khóa Crypto Ký Quỹ</div>
+                <div class="card-desc">Tự động tạm khóa số coin của Seller trong ví Escrow bảo vệ Buyer.</div>
+              </div>
+            </div>
+            <div class="grid-cell"></div>
+
+            <!-- ROW 2: Payment Execution -->
+            <div class="phase-header">
+              <span class="phase-number">GĐ 2</span>
+              <span>Chuyển Tiền Qua PayPay</span>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="b-step2-buyer" data-role="user" data-step="B2.1">
+                <div class="card-header">
+                  <span class="card-step-tag">Bước 2.1</span>
+                </div>
+                <div class="card-title">Xác thực & Chuyển tiền</div>
+                <div class="card-desc">Mở app PayPay, kiểm tra khớp Ví ID Seller, nhập đúng số tiền & xác thực PIN/Sinh trắc học.</div>
+              </div>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="b-step2-paypay" data-role="paypay" data-step="B2.2">
+                <div class="card-header">
+                  <span class="card-step-tag">Hệ thống</span>
+                </div>
+                <div class="card-title">Xử lý Giao dịch</div>
+                <div class="card-desc">Cập nhật số dư 2 ví trong thời gian thực. Tạo Transaction ID duy nhất.</div>
+                <div class="card-meta">
+                  <span class="badge-time"><svg style="vertical-align: middle; margin-right: 4px;" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Tức thì</span>
+                </div>
+              </div>
+            </div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+
+            <!-- ROW 3: Receipt Generation -->
+            <div class="phase-header">
+              <span class="phase-number">GĐ 3</span>
+              <span>Tự Động Tạo Hóa Đơn</span>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="b-step3-buyer" data-role="user" data-step="B3.2">
+                <div class="card-header">
+                  <span class="card-step-tag">Bước 3.2</span>
+                </div>
+                <div class="card-title">Tải / Chụp Hóa đơn</div>
+                <div class="card-desc">Lưu hóa đơn điện tử từ PayPay về máy làm bằng chứng thanh toán hợp lệ.</div>
+              </div>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="b-step3-paypay" data-role="paypay" data-step="B3.1">
+                <div class="card-header">
+                  <span class="card-step-tag">Tự động</span>
+                </div>
+                <div class="card-title">Xuất Hóa Đơn Chuẩn</div>
+                <div class="card-desc">Tự động xuất hóa đơn chứa: Mã GD, Timestamp, Ví gửi/nhận, Số tiền & Trạng thái "Thành công".</div>
+                <div class="card-meta">
+                  <span class="badge-time"><svg style="vertical-align: middle; margin-right: 4px;" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>&lt; 5s</span>
+                </div>
+              </div>
+            </div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+
+            <!-- ROW 4: Automated Real-time API Reconciliation & Release -->
+            <div class="phase-header">
+              <span class="phase-number">GĐ 4</span>
+              <span>Đối Soát API & Tự Động Mở Khóa Coin</span>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="b-step4-buyer" data-role="user" data-step="B4.1">
+                <div class="card-header">
+                  <span class="card-step-tag">Bước 4.1</span>
+                </div>
+                <div class="card-title">Khai báo Mã GD & Bấm "Đã Thanh Toán"</div>
+                <div class="card-desc">Buyer nhập Mã GD PayPay (TxID) & upload Hóa đơn lên Binance P2P.</div>
+              </div>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="b-step4-paypay-server" data-role="paypay" data-step="B4.3">
+                <div class="card-header">
+                  <span class="card-step-tag">PayPay API</span>
+                </div>
+                <div class="card-title">Xác Thực Real-time (200 OK)</div>
+                <div class="card-desc">PayPay API kiểm tra khớp TxID, Số tiền & Ví nhận -> Phản hồi is_verified: true.</div>
+                <div class="card-meta">
+                  <span class="badge-time"><svg style="vertical-align: middle; margin-right: 4px;" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>&lt; 1.5s API Response</span>
+                </div>
+              </div>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="b-step4-binance" data-role="binance" data-step="B4.4">
+                <div class="card-header">
+                  <span class="card-step-tag">Auto-Release</span>
+                </div>
+                <div class="card-title">Tự Động Mở Khóa Crypto</div>
+                <div class="card-desc">Binance giải phóng Crypto ký quỹ sang ví Buyer TỨC THÌ (Zero-manual Seller action).</div>
+                <div class="card-meta">
+                  <span class="badge-time"><svg style="vertical-align: middle; margin-right: 4px;" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Tự động 100%</span>
+                </div>
+              </div>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="b-step4-api" data-role="support" data-step="B4.2">
+                <div class="card-header">
+                  <span class="card-step-tag">Binance Engine</span>
+                </div>
+                <div class="card-title">Kích Hoạt API Tra Cứu PayPay</div>
+                <div class="card-desc">Hệ thống Binance tự động gửi Request API POST /v1/paypay/reconcile check đơn hàng.</div>
+              </div>
+            </div>
+
+            <!-- SVG Overlay Connections -->
+            <svg class="svg-overlay" id="buyerSvgCanvas"></svg>
+          </div>
+        </div>
+
+        <!-- Step-by-Step Cards View (Hidden by default) -->
+        <div class="step-list-wrapper steps-view-mode" style="display: none;">
+          
+          <div class="step-card">
+            <div class="step-number-box">01</div>
+            <div class="step-main-info">
+              <span class="step-role-pill" style="background: #dbeafe; color: #1e40af;">Actor: Buyer & Binance P2P</span>
+              <h3>Bước 1: Khớp Đơn Hàng & Khai Báo Thanh Toán</h3>
+              <p>Người mua tiến hành chọn đơn mua P2P trên ứng dụng Binance. Khi đơn hàng được khớp, hệ thống mở cửa sổ Chat P2P giữa Người mua và Người bán.</p>
+              
+              <div class="step-details-grid">
+                <div>
+                  <div class="detail-box-title">Thời lượng SLA</div>
+                  <div class="detail-box-content">Tức thì - 15 đến 30 phút</div>
+                </div>
+                <div>
+                  <div class="detail-box-title">Hệ thống / Công cụ</div>
+                  <div class="detail-box-content">Binance P2P Chat + PayPay Wallet App</div>
+                </div>
+                <div>
+                  <div class="detail-box-title">Kết quả đầu ra</div>
+                  <div class="detail-box-content">Số ví PayPay của Seller được xác nhận chính xác.</div>
+                </div>
+              </div>
+
+              <div class="branch-alert">
+                <svg style="vertical-align: middle; margin-right: 6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><strong>Lưu ý quan trọng (Branching Condition):</strong> Nếu Ví PayPay ID hiển thị trên app PayPay không trùng khớp chính xác với thông tin Seller đã gửi trong Binance Chat, Người mua <strong>tuyệt đối không chuyển tiền</strong> và phải báo cáo hỗ trợ Binance lập tức.
+              </div>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number-box">02</div>
+            <div class="step-main-info">
+              <span class="step-role-pill" style="background: #fee2e2; color: #991b1b;">Actor: Buyer & Hệ thống PayPay</span>
+              <h3>Bước 2: Thực Hiện Chuyển Tiền Trên PayPay</h3>
+              <p>Người mua mở ứng dụng PayPay, nhập chính xác Ví ID / Quét mã QR của Người bán, nhập đúng số tiền giao dịch và thực hiện xác thực bảo mật (Mã PIN / Vân tay / FaceID / OTP).</p>
+              
+              <div class="step-details-grid">
+                <div>
+                  <div class="detail-box-title">Thời lượng SLA</div>
+                  <div class="detail-box-content">Real-time (Vài giây)</div>
+                </div>
+                <div>
+                  <div class="detail-box-title">Hệ thống / Công cụ</div>
+                  <div class="detail-box-content">PayPay Mobile Wallet Backend</div>
+                </div>
+                <div>
+                  <div class="detail-box-title">Kết quả đầu ra</div>
+                  <div class="detail-box-content">Tiền được ghi có vào tài khoản PayPay của Seller; Tạo Mã giao dịch (Transaction ID) duy nhất.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number-box">03</div>
+            <div class="step-main-info">
+              <span class="step-role-pill" style="background: #fee2e2; color: #991b1b;">Actor: Hệ thống Tự Động PayPay</span>
+              <h3>Bước 3: Tự Động Tạo Hóa Đơn Điện Tử (Auto Receipt)</h3>
+              <p>Ngay sau khi giao dịch chuyển tiền thành công, hệ thống PayPay tự động tạo ra một Hóa đơn điện tử (Digital Receipt) tiêu chuẩn có tính bảo chứng cao.</p>
+              
+              <div class="step-details-grid">
+                <div>
+                  <div class="detail-box-title">Thời lượng SLA</div>
+                  <div class="detail-box-content">&lt; 5 Giây</div>
+                </div>
+                <div>
+                  <div class="detail-box-title">Thông tin trên Hóa đơn</div>
+                  <div class="detail-box-content">Mã GD (Transaction ID), Dấu thời gian (Timestamp), Ví gửi, Ví nhận, Số tiền, Trạng thái "Thành công".</div>
+                </div>
+                <div>
+                  <div class="detail-box-title">Kết quả đầu ra</div>
+                  <div class="detail-box-content">Hóa đơn khả dụng trong Lịch sử giao dịch để xuất file PDF hoặc Ảnh chụp màn hình.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number-box">04</div>
+            <div class="step-main-info">
+              <span class="step-role-pill" style="background: #dbeafe; color: #1e40af;">Actor: Buyer & Binance System</span>
+              <h3>Bước 4: Upload Hóa Đơn & Xác Nhận Đã Thanh Toán</h3>
+              <p>Người mua tải/chụp Hóa đơn điện tử PayPay, tải lên cửa sổ Chat P2P trên Binance (hoặc Trung tâm Tranh chấp), sau đó nhấn nút "Đã thanh toán / Transferred, notify seller".</p>
+              
+              <div class="step-details-grid">
+                <div>
+                  <div class="detail-box-title">Thời lượng SLA</div>
+                  <div class="detail-box-content">Ngay sau khi nhận hóa đơn</div>
+                </div>
+                <div>
+                  <div class="detail-box-title">Kết quả đầu ra</div>
+                  <div class="detail-box-content">Lưu bằng chứng thanh toán vào Binance Trade Record; Kích hoạt đồng hồ đếm ngược xác nhận của Seller.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number-box">05</div>
+            <div class="step-main-info">
+              <span class="step-role-pill" style="background: #fef3c7; color: #92400e;">Actor: Binance Agent & PayPay Verification Endpoint</span>
+              <h3>Bước 5: Xác Minh Hóa Đơn & Mở Khóa Coin (Verification & Release)</h3>
+              <p>Seller kiểm tra ví PayPay và nhấn mở khóa Crypto. Trường hợp Seller không xác nhận hoặc có tranh chấp, Binance Agent (hoặc hệ thống đối soát tự động) sẽ dùng Mã giao dịch trên Hóa đơn để tra cứu qua API/Portal của PayPay. Khi dữ liệu trùng khớp 100%, Binance tự động mở khóa Crypto giải phóng cho Người mua.</p>
+              
+              <div class="step-details-grid">
+                <div>
+                  <div class="detail-box-title">Thời lượng SLA Tra cứu</div>
+                  <div class="detail-box-content">&lt; 30 giây (Qua API) / &lt; 4 giờ làm việc (Portal thủ công)</div>
+                </div>
+                <div>
+                  <div class="detail-box-title">Kết quả đầu ra</div>
+                  <div class="detail-box-content">Crypto được giải phóng an toàn vào Ví Binance của Buyer; Đóng đơn tranh chấp thành công.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================= SELLER FLOW SECTION ================= -->
+      <div id="seller-section" style="margin-bottom: 3rem;">
+        <h2 class="section-title">
+          <svg style="vertical-align: middle; margin-right: 6px;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>2. Luồng Người Dùng Đi Bán Coin (Seller Flow)
+        </h2>
+        
+        <!-- Swimlane View -->
+        <div class="swimlane-scroll-container swimlane-view-mode">
+          <div class="swimlane-grid" id="sellerSwimlaneGrid">
+            <!-- Headers -->
+            <div class="grid-header corner-header">
+              <span>Giai Đoạn \ Vai Trò</span>
+            </div>
+            <div class="grid-header header-seller">
+              <span><span class="role-badge role-seller"></span> User Bán (Seller)</span>
+            </div>
+            <div class="grid-header header-paypay">
+              <span><span class="role-badge role-paypay"></span> <img src="data:image/png;base64,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" alt="PayPay" style="height: 26px; width: 26px; vertical-align: middle; margin-right: 6px; background: #8b5cf6; border-radius: 6px; padding: 3px;">Ví PayPay App</span>
+            </div>
+            <div class="grid-header">
+              <span><span class="role-badge role-binance"></span> <svg width="26" height="26" viewBox="0 0 126.611 126.611" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 6px;">
+<polygon fill="#F3BA2F" points="38.171,53.203 62.759,28.616 87.36,53.216 101.667,38.909 62.759,0 23.864,38.896"/>
+<rect x="3.644" y="53.188" transform="matrix(0.7071 0.7071 -0.7071 0.7071 48.7933 8.8106)" fill="#F3BA2F" width="20.233" height="20.234"/>
+<polygon fill="#F3BA2F" points="38.171,73.408 62.759,97.995 87.359,73.396 101.674,87.695 101.667,87.703 62.759,126.611 23.863,87.716 23.843,87.696"/>
+<rect x="101.64" y="53.189" transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 235.5457 29.0503)" fill="#F3BA2F" width="20.234" height="20.233"/>
+<polygon fill="#F3BA2F" points="77.271,63.298 77.277,63.298 62.759,48.78 52.03,59.509 52.029,59.509 50.797,60.742 48.254,63.285 48.254,63.285 48.234,63.305 48.254,63.326 62.759,77.831 77.277,63.313 77.274,63.305"/>
+</svg>Sàn Binance P2P</span>
+            </div>
+            <div class="grid-header">
+              <span><span class="role-badge role-support"></span> Hệ thống Đối soát</span>
+            </div>
+
+            <!-- ROW 1: Order Listing -->
+            <div class="phase-header">
+              <span class="phase-number">GĐ 1</span>
+              <span>Đăng Đơn Bán & Khóa Coin</span>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="s-step1-seller" data-role="seller" data-step="S1.1">
+                <div class="card-header">
+                  <span class="card-step-tag">Bước 1.1</span>
+                </div>
+                <div class="card-title">Cung cấp Ví PayPay</div>
+                <div class="card-desc">Nhận đơn bán trên Binance P2P. Gửi Mã ID Ví / Mã QR PayPay vào cửa sổ Chat P2P.</div>
+              </div>
+            </div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell">
+              <div class="card-node" id="s-step1-binance" data-role="binance" data-step="S1.2">
+                <div class="card-header">
+                  <span class="card-step-tag">Tự động</span>
+                </div>
+                <div class="card-title">Khóa Crypto Escrow</div>
+                <div class="card-desc">Binance khóa lượng coin tương ứng của Seller trong Ví Ký quỹ an toàn.</div>
+              </div>
+            </div>
+            <div class="grid-cell"></div>
+
+            <!-- ROW 2: Awaiting Payment -->
+            <div class="phase-header">
+              <span class="phase-number">GĐ 2</span>
+              <span>Chờ & Kiểm Tra Tiền Đến</span>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="s-step2-seller" data-role="seller" data-step="S2.2">
+                <div class="card-header">
+                  <span class="card-step-tag">Bước 2.2</span>
+                </div>
+                <div class="card-title">Đối Soát Tiền Vào Ví</div>
+                <div class="card-desc">Mở app PayPay check số dư thực tế + Mã GD + Tên người gửi xem khớp 100% với đơn hàng.</div>
+              </div>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="s-step2-paypay" data-role="paypay" data-step="S2.1">
+                <div class="card-header">
+                  <span class="card-step-tag">Thông báo</span>
+                </div>
+                <div class="card-title">Nhận Thông Báo Tiền Vào</div>
+                <div class="card-desc">PayPay gửi Push Notification báo biến động số dư dương (+) khi Buyer chuyển xong.</div>
+              </div>
+            </div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+
+            <!-- ROW 3: Auto API Reconciliation & Notification -->
+            <div class="phase-header">
+              <span class="phase-number">GĐ 3</span>
+              <span>Tự Động Đối Soát & Nhận Thông Báo</span>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="s-step3-seller-notify" data-role="seller" data-step="S3.3">
+                <div class="card-header">
+                  <span class="card-step-tag">Thông báo</span>
+                </div>
+                <div class="card-title">Nhận Thông Báo Hoàn Tất</div>
+                <div class="card-desc">Seller nhận Push/SMS: "Đơn hàng đã tự động đối soát qua PayPay API & hoàn tất. Không cần thao tác thủ công".</div>
+              </div>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="s-step3-paypay" data-role="paypay" data-step="S3.1">
+                <div class="card-header">
+                  <span class="card-step-tag">PayPay API</span>
+                </div>
+                <div class="card-title">Xác Thực Real-time (200 OK)</div>
+                <div class="card-desc">PayPay API xác nhận khớp TxID, Số tiền & Ví nhận -> Trả về is_verified: true.</div>
+              </div>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="s-step3-binance" data-role="binance" data-step="S3.2">
+                <div class="card-header">
+                  <span class="card-step-tag">Auto-Release</span>
+                </div>
+                <div class="card-title">Tự Động Giải Phong Coin</div>
+                <div class="card-desc">Hệ thống Binance tự động chuyển Crypto cho Buyer ngay khi API đối soát trả về MATCHED.</div>
+              </div>
+            </div>
+            <div class="grid-cell">
+              <div class="card-node" id="s-step3-api" data-role="support" data-step="S3.1">
+                <div class="card-header">
+                  <span class="card-step-tag">Binance Engine</span>
+                </div>
+                <div class="card-title">Gọi API Đối Soát PayPay</div>
+                <div class="card-desc">Hệ thống phát lệnh truy vấn API PayPay xác minh giao dịch tự động khi Buyer báo chuyển.</div>
+              </div>
+            </div>
+
+            <!-- SVG Overlay Connections -->
+            <svg class="svg-overlay" id="sellerSvgCanvas"></svg>
+          </div>
+        </div>
+
+        <!-- Step-by-Step Cards View (Hidden by default) -->
+        <div class="step-list-wrapper steps-view-mode" style="display: none;">
+          
+          <div class="step-card">
+            <div class="step-number-box">01</div>
+            <div class="step-main-info">
+              <span class="step-role-pill" style="background: #fef3c7; color: #92400e;">Actor: Seller & Binance Escrow</span>
+              <h3>Bước 1: Nhận Đơn Bán & Cung Cấp Thông Tin Ví</h3>
+              <p>Người bán đăng đơn bán hoặc nhận lệnh khớp từ Người mua trên Binance P2P. Hệ thống Binance tự động tạm khóa (Escrow) số lượng Crypto tương ứng. Người bán gửi Ví PayPay ID hoặc Mã QR vào Chat P2P.</p>
+              
+              <div class="step-details-grid">
+                <div>
+                  <div class="detail-box-title">Nhiệm vụ chính</div>
+                  <div class="detail-box-content">Cung cấp chính xác thông tin Ví PayPay chính chủ.</div>
+                </div>
+                <div>
+                  <div class="detail-box-title">Cơ chế bảo vệ</div>
+                  <div class="detail-box-content">Crypto được Binance giữ an toàn trong Escrow.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number-box">02</div>
+            <div class="step-main-info">
+              <span class="step-role-pill" style="background: #fee2e2; color: #991b1b;">Actor: Seller & App PayPay</span>
+              <h3>Bước 2: Kiểm Tra Biến Động Số Dư & Hóa Đơn Trên PayPay</h3>
+              <p>Khi nhận thông báo Push từ PayPay, Người bán <strong>bắt buộc phải mở trực tiếp ứng dụng PayPay</strong> để kiểm tra biến động số dư thực tế, đối soát Mã giao dịch và tên người gửi.</p>
+              
+              <div class="branch-alert">
+                <svg style="vertical-align: middle; margin-right: 6px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><strong>Quy tắc An toàn tuyệt đối:</strong> Tuyệt đối KHÔNG bao giờ mở khóa Coin chỉ dựa trên hình ảnh Hóa đơn gửi trong chat hoặc Tin nhắn SMS/Email giả mạo. Phải thấy tiền thực xuất hiện trong ứng dụng PayPay!
+              </div>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number-box">03</div>
+            <div class="step-main-info">
+              <span class="step-role-pill" style="background: #dbeafe; color: #1e40af;">Actor: Seller & Binance System</span>
+              <h3>Bước 3: Xác Nhận Đã Nhận Tiền & Giải Phong Coin</h3>
+              <p>Sau khi xác nhận khoản tiền đã nhận 100% chính xác trong PayPay, Người bán quay lại ứng dụng Binance P2P, nhấn nút "Xác nhận đã nhận thanh toán" (Payment Received) và hoàn tất xác thực 2FA OTP.</p>
+              
+              <div class="step-details-grid">
+                <div>
+                  <div class="detail-box-title">Hành động của Binance</div>
+                  <div class="detail-box-content">Giải phóng Crypto từ Ví Escrow sang Ví của Người mua.</div>
+                </div>
+                <div>
+                  <div class="detail-box-title">Trạng thái đơn hàng</div>
+                  <div class="detail-box-content">Đơn hàng hoàn tất (Completed).</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number-box">04</div>
+            <div class="step-main-info">
+              <span class="step-role-pill" style="background: #f3e8ff; color: #6b21a8;">Actor: Seller & Binance Support Team</span>
+              <h3>Bước 4: Xử Lý Khiếu Nại Tranh Chấp (Dispute Flow)</h3>
+              <p>Nếu hết thời gian chờ mà Người bán vẫn chưa nhận được tiền trong PayPay nhưng Người mua đã bấm "Đã thanh toán", Người bán giữ nguyên Crypto trong Escrow và bấm "Khiếu nại / Appeal".</p>
+              
+              <div class="step-details-grid">
+                <div>
+                  <div class="detail-box-title">Cơ chế giải quyết</div>
+                  <div class="detail-box-content">Binance Support lấy Hóa đơn PayPay từ Buyer, kiểm tra trực tiếp qua API PayPay Partner Portal.</div>
+                </div>
+                <div>
+                  <div class="detail-box-title">SLA Xử lý</div>
+                  <div class="detail-box-content">&lt; 24 Giờ cho tất cả các ca khiếu nại P2P.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      
+      </div>
+
+    </div>
+  </div>
+
+  
+
+  <script>
+    // App State Management
+    const state = {
+      viewMode: 'swimlane',
+      theme: 'light'
+    };
+
+    // DOM Elements
+    const viewBtns = document.querySelectorAll('.view-btn');
+        
+    // View Mode Toggle Logic (Swimlane vs Step-by-Step)
+    viewBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.getAttribute('data-view');
+        viewBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.viewMode = view;
+
+        const swimlaneEls = document.querySelectorAll('.swimlane-view-mode');
+        const stepsEls = document.querySelectorAll('.steps-view-mode');
+
+        if (view === 'swimlane') {
+          swimlaneEls.forEach(el => el.style.display = 'block');
+          stepsEls.forEach(el => el.style.display = 'none');
+          setTimeout(drawSvgConnections, 100);
+        } else {
+          swimlaneEls.forEach(el => el.style.display = 'none');
+          stepsEls.forEach(el => el.style.display = 'block');
+        }
+      });
+    });
+
+    // Helper to get port coordinates at the exact card outer edge border
+    function getPortCoords(el, port, canvasBox) {
+      const box = el.getBoundingClientRect();
+      let x, y;
+      
+      if (port === 'top') {
+        x = box.left - canvasBox.left + box.width / 2;
+        y = box.top - canvasBox.top;
+      } else if (port === 'bottom') {
+        x = box.left - canvasBox.left + box.width / 2;
+        y = box.bottom - canvasBox.top;
+      } else if (port === 'left') {
+        x = box.left - canvasBox.left;
+        y = box.top - canvasBox.top + box.height / 2;
+      } else if (port === 'right') {
+        x = box.right - canvasBox.left;
+        y = box.top - canvasBox.top + box.height / 2;
+      }
+      return { x, y };
+    }
+
+    // Helper to build Manhattan paths with clean 90-degree angles & trimmed endpoint for arrowhead
+    function buildManhattanPath(start, end, fromPort, toPort) {
+      const sx = start.x;
+      const sy = start.y;
+      const arrowLen = 12;
+      let ex = end.x;
+      let ey = end.y;
+
+      // Trim stroke line endpoint back by arrowLen so line NEVER penetrates into the arrowhead
+      if (toPort === 'left') {
+        ex = end.x - arrowLen;
+      } else if (toPort === 'right') {
+        ex = end.x + arrowLen;
+      } else if (toPort === 'top') {
+        ey = end.y - arrowLen;
+      } else if (toPort === 'bottom') {
+        ey = end.y + arrowLen;
+      }
+
+      // Custom Corridors for Top-to-Top and Bottom-to-Bottom to bypass cards cleanly
+      if (fromPort === 'top' && toPort === 'top') {
+        const topY = Math.min(sy, end.y) - 48;
+        return `M ${sx} ${sy} L ${sx} ${topY} L ${ex} ${topY} L ${ex} ${ey}`;
+      }
+
+      if (fromPort === 'bottom' && toPort === 'bottom') {
+        const bottomY = Math.max(sy, end.y) + 48;
+        return `M ${sx} ${sy} L ${sx} ${bottomY} L ${ex} ${bottomY} L ${ex} ${ey}`;
+      }
+
+      // Straight Horizontal (same Y level)
+      if ((fromPort === 'right' && toPort === 'left') || (fromPort === 'left' && toPort === 'right')) {
+        if (Math.abs(sy - ey) < 16) {
+          return `M ${sx} ${sy} L ${ex} ${ey}`;
+        }
+      }
+
+      // Straight Vertical (same X level)
+      if ((fromPort === 'bottom' && toPort === 'top') || (fromPort === 'top' && toPort === 'bottom')) {
+        if (Math.abs(sx - ex) < 16) {
+          return `M ${sx} ${sy} L ${ex} ${ey}`;
+        }
+      }
+
+      const margin = 24;
+
+      // Calculate start control point (step out 24px from source card border)
+      let cx1 = sx;
+      let cy1 = sy;
+      if (fromPort === 'right') cx1 = sx + margin;
+      else if (fromPort === 'left') cx1 = sx - margin;
+      else if (fromPort === 'top') cy1 = sy - margin;
+      else if (fromPort === 'bottom') cy1 = sy + margin;
+
+      // Calculate end approach point (step back 24px from target card border)
+      let cx2 = ex;
+      let cy2 = ey;
+      if (toPort === 'right') cx2 = ex + margin;
+      else if (toPort === 'left') cx2 = ex - margin;
+      else if (toPort === 'top') cy2 = ey - margin;
+      else if (toPort === 'bottom') cy2 = ey + margin;
+
+      // 4-segment Orthogonal Path stepping away from card borders by margin
+      if (fromPort === 'left' || fromPort === 'right') {
+        return `M ${sx} ${sy} L ${cx1} ${sy} L ${cx1} ${cy2} L ${ex} ${cy2} L ${ex} ${ey}`;
+      } else {
+        return `M ${sx} ${sy} L ${sx} ${cy1} L ${cx2} ${cy1} L ${cx2} ${ey} L ${ex} ${ey}`;
+      }
+    }
+
+    // SVG Manhattan Routing Generator
+    function drawSvgConnections() {
+      if (state.viewMode !== 'swimlane') return;
+
+      drawSingleFlow('buyerSvgCanvas', 'buyerSwimlaneGrid', true);
+      drawSingleFlow('sellerSvgCanvas', 'sellerSwimlaneGrid', false);
+    }
+
+    function drawSingleFlow(canvasId, gridId, isBuyer) {
+      const canvas = document.getElementById(canvasId);
+      const gridContainer = document.getElementById(gridId);
+      
+      if (!canvas || !gridContainer) return;
+
+      // Clear existing canvas
+      canvas.innerHTML = '';
+
+      // Set dimensions to cover full scrollable width and height + extra corridor space
+      const fullWidth = Math.max(gridContainer.scrollWidth, gridContainer.offsetWidth);
+      const fullHeight = Math.max(gridContainer.scrollHeight, gridContainer.offsetHeight) + 100;
+
+      canvas.style.width = fullWidth + 'px';
+      canvas.style.height = fullHeight + 'px';
+      canvas.setAttribute('width', fullWidth);
+      canvas.setAttribute('height', fullHeight);
+
+      // Inject SVG Definitions for Arrowheads
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      defs.innerHTML = `
+        <marker id="arrow-default" viewBox="0 0 12 10" refX="0" refY="5" markerWidth="12" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto">
+          <path d="M 0 0 L 12 5 L 0 10 z" fill="#475569" />
+        </marker>
+        <marker id="arrow-active" viewBox="0 0 12 10" refX="0" refY="5" markerWidth="14" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
+          <path d="M 0 0 L 12 5 L 0 10 z" fill="#2563eb" />
+        </marker>
+      `;
+      canvas.appendChild(defs);
+
+      // Connections Definition
+      const connections = isBuyer ? [
+        { from: 'b-step1', fromPort: 'right', to: 'b-step1-binance', toPort: 'left' },
+        { from: 'b-step1-binance', fromPort: 'bottom', to: 'b-step2-buyer', toPort: 'top' },
+        { from: 'b-step2-buyer', fromPort: 'right', to: 'b-step2-paypay', toPort: 'left' },
+        { from: 'b-step2-paypay', fromPort: 'bottom', to: 'b-step3-paypay', toPort: 'top' },
+        { from: 'b-step3-paypay', fromPort: 'left', to: 'b-step3-buyer', toPort: 'right' },
+        { from: 'b-step3-buyer', fromPort: 'bottom', to: 'b-step4-buyer', toPort: 'top' },
+        { from: 'b-step4-buyer', fromPort: 'bottom', to: 'b-step4-api', toPort: 'bottom' },
+        { from: 'b-step4-api', fromPort: 'top', to: 'b-step4-paypay-server', toPort: 'top' },
+        { from: 'b-step4-paypay-server', fromPort: 'right', to: 'b-step4-binance', toPort: 'left' }
+      ] : [
+        { from: 's-step1-seller', fromPort: 'right', to: 's-step1-binance', toPort: 'left' },
+        { from: 's-step1-binance', fromPort: 'bottom', to: 's-step2-seller', toPort: 'top' },
+        { from: 's-step2-seller', fromPort: 'right', to: 's-step2-paypay', toPort: 'left' },
+        { from: 's-step2-paypay', fromPort: 'bottom', to: 's-step3-api', toPort: 'top' },
+        { from: 's-step3-api', fromPort: 'bottom', to: 's-step3-paypay', toPort: 'bottom' },
+        { from: 's-step3-paypay', fromPort: 'right', to: 's-step3-binance', toPort: 'left' },
+        { from: 's-step3-binance', fromPort: 'bottom', to: 's-step3-seller-notify', toPort: 'bottom' }
+      ];
+
+      const canvasBox = canvas.getBoundingClientRect();
+
+      connections.forEach(conn => {
+        const fromEl = document.getElementById(conn.from);
+        const toEl = document.getElementById(conn.to);
+
+        if (!fromEl || !toEl) return;
+
+        const start = getPortCoords(fromEl, conn.fromPort, canvasBox);
+        const end = getPortCoords(toEl, conn.toPort, canvasBox);
+        const pathData = buildManhattanPath(start, end, conn.fromPort, conn.toPort);
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', pathData);
+        path.setAttribute('class', 'connection-line');
+        path.setAttribute('data-from', conn.from);
+        path.setAttribute('data-to', conn.to);
+
+        canvas.appendChild(path);
+      });
+    }
+
+    // Hover Highlight Logic (Direct Card Listeners for Maximum Performance)
+    document.querySelectorAll('.card-node').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        if (document.body.classList.contains('is-scrolling')) return;
+        const container = card.closest('.swimlane-scroll-container');
+        if (!container) return;
+
+        container.classList.add('grid-hovered');
+        card.classList.add('highlighted');
+
+        const cardId = card.id;
+        const paths = container.querySelectorAll(`path[data-from="${cardId}"]`);
+        
+        paths.forEach(p => {
+          p.classList.add('active');
+          const targetId = p.getAttribute('data-to');
+          const targetCard = document.getElementById(targetId);
+          if (targetCard) targetCard.classList.add('highlighted');
+        });
+      });
+
+      card.addEventListener('mouseleave', () => {
+        const container = card.closest('.swimlane-scroll-container');
+        if (!container) return;
+
+        container.classList.remove('grid-hovered');
+        container.querySelectorAll('.card-node').forEach(c => c.classList.remove('highlighted'));
+        container.querySelectorAll('path').forEach(p => p.classList.remove('active'));
+      });
+    });
+
+    // Card Click Interaction: Highlight Outgoing Directional Arrows (No Popup)
+    let selectedCardId = null;
+
+    document.querySelectorAll('.card-node').forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const container = card.closest('.swimlane-scroll-container');
+        if (!container) return;
+
+        const cardId = card.id;
+
+        // Toggle selection if clicking the already selected card
+        if (card.classList.contains('selected')) {
+          clearAllCardSelections();
+          return;
+        }
+
+        clearAllCardSelections();
+
+        // Highlight clicked card & container
+        card.classList.add('selected');
+        card.classList.add('highlighted');
+        container.classList.add('grid-hovered');
+        selectedCardId = cardId;
+
+        // Show outgoing directional arrows starting from this card & auto smooth-scroll to target card
+        const paths = container.querySelectorAll(`path[data-from="${cardId}"]`);
+        let firstTargetCard = null;
+
+        paths.forEach(p => {
+          p.classList.add('active');
+          const targetId = p.getAttribute('data-to');
+          const targetCard = document.getElementById(targetId);
+          if (targetCard) {
+            targetCard.classList.add('highlighted');
+          }
+        });
+      });
+    });
+
+    // Click outside cards to clear selection
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.card-node')) {
+        clearAllCardSelections();
+      }
+    });
+
+    function clearAllCardSelections() {
+      document.querySelectorAll('.swimlane-scroll-container').forEach(container => {
+        container.classList.remove('grid-hovered');
+        container.querySelectorAll('.card-node').forEach(c => {
+          c.classList.remove('highlighted');
+          c.classList.remove('selected');
+        });
+        container.querySelectorAll('path').forEach(p => p.classList.remove('active'));
+      });
+      selectedCardId = null;
+    }
+
+    // Simulator Button Logic
+    const runSimBtn = document.getElementById('runSimBtn');
+    const apiResponseBox = document.getElementById('apiResponseBox');
+
+    if (runSimBtn) {
+      runSimBtn.addEventListener('click', () => {
+        apiResponseBox.innerHTML = `<span style="color: #f59e0b;"><svg style="vertical-align: middle; margin-right: 6px; animation: spin 1s linear infinite; display: inline-block;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/></svg>Đang gửi request sang API PayPay verification endpoint...</span>`;
+        
+        setTimeout(() => {
+          apiResponseBox.innerHTML = `{
+  <span style="color: #7dd3fc;">"status"</span>: <span style="color: #86efac;">"SUCCESS"</span>,
+  <span style="color: #7dd3fc;">"code"</span>: <span style="color: #fde047;">200</span>,
+  <span style="color: #7dd3fc;">"data"</span>: {
+    <span style="color: #7dd3fc;">"transaction_id"</span>: <span style="color: #f472b6;">"PP-88392019482"</span>,
+    <span style="color: #7dd3fc;">"amount"</span>: <span style="color: #fde047;">5000000</span>,
+    <span style="color: #7dd3fc;">"currency"</span>: <span style="color: #f472b6;">"JPY"</span>,
+    <span style="color: #7dd3fc;">"sender_wallet"</span>: <span style="color: #f472b6;">"PAYPAY_BUYER_88"</span>,
+    <span style="color: #7dd3fc;">"receiver_wallet"</span>: <span style="color: #f472b6;">"PAYPAY_SELLER_09"</span>,
+    <span style="color: #7dd3fc;">"timestamp"</span>: <span style="color: #f472b6;">"2026-07-29T12:30:15Z"</span>,
+    <span style="color: #7dd3fc;">"is_verified"</span>: <span style="color: #86efac;">true</span>
+  },
+  <span style="color: #7dd3fc;">"binance_recommendation"</span>: <span style="color: #86efac;">"RELEASE_CRYPTO_IMMEDIATELY"</span>
+}`;
+        }, 1200);
+      });
+    }
+
+    
+
+
+    
+
+    
+    // Scroll Performance Optimization: Lock pointer events during scrolling to prevent hover layout reflows
+    let isScrollingTimer;
+    window.addEventListener('scroll', () => {
+      document.body.classList.add('is-scrolling');
+      clearTimeout(isScrollingTimer);
+      isScrollingTimer = setTimeout(() => {
+        document.body.classList.remove('is-scrolling');
+      }, 150);
+    }, { passive: true });
+
+    
+    // Responsive Auto-Redraw on Window Resize & Element Layout Shift
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        drawSvgConnections();
+      }, 50);
+    });
+
+    if (window.ResizeObserver) {
+      const ro = new ResizeObserver(() => {
+        drawSvgConnections();
+      });
+      document.querySelectorAll('.swimlane-grid, .swimlane-scroll-container').forEach(el => ro.observe(el));
+    }
+
+    // Draw initial SVG
+    window.addEventListener('load', () => {
+      setTimeout(drawSvgConnections, 100);
+    });
+  </script>
+</body>
+</html>
